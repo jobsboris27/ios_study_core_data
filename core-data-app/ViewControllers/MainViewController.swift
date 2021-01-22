@@ -26,6 +26,18 @@ class MainViewController: UIViewController {
   
   private var photos: [Photo] = []
   
+  private var dataManager: DataManagerProtocol!
+
+  init(dataManager: DataManagerProtocol) {
+    super.init(nibName: nil, bundle: nil)
+    
+    self.dataManager = dataManager
+  }
+  
+  required init?(coder: NSCoder) {
+    fatalError("init(coder:) has not been implemented")
+  }
+
   override func viewDidLoad() {
     super.viewDidLoad()
     
@@ -112,12 +124,12 @@ extension MainViewController: UINavigationControllerDelegate, UIImagePickerContr
 // MARK: - Manipulate with data
 extension MainViewController {
   private func fetchData() {
-    photos = DataManager.shared.fetchPhotos()
+    photos = dataManager.fetchPhotos()
     tableView.reloadData()
   }
   
   private func addNewPhoto(imageData: Data) {
-    let photo = DataManager.shared.savePhoto(data: imageData)
+    let photo = dataManager.savePhoto(data: imageData)
     photos.append(photo)
     
     let cellIndex = IndexPath(row: photos.count - 1, section: 0)
@@ -126,7 +138,7 @@ extension MainViewController {
   
   private func deletePhoto(forRowAt indexPath: IndexPath) {
     photos.remove(at: indexPath.row)
-    DataManager.shared.deletePhoto(indexPath: indexPath)
+    dataManager.deletePhoto(indexPath: indexPath)
     tableView.deleteRows(at: [indexPath], with: .fade)
   }
 }

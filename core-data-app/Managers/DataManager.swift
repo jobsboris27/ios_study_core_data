@@ -9,7 +9,13 @@ import Foundation
 import UIKit
 import CoreData
 
-struct DataManager {
+protocol DataManagerProtocol {
+  func savePhoto(data: Data) -> Photo
+  func fetchPhotos() -> [Photo]
+  func deletePhoto(indexPath: IndexPath)
+}
+
+struct DataManager: DataManagerProtocol {
   private let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
   
   static let shared = DataManager()
